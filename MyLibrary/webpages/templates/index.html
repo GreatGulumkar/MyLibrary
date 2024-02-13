@@ -30,16 +30,29 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Contact</a>
         </li>
-        <a href="login">
-          <button id="loginButton" class="btn btn-light ml-2">Login</button>
+        {% if login %}
+        <a href="{% url 'user_logout' %}">
+          <button id="loginButton" class="btn btn-light ml-2">
+            Logout
+          </button>
         </a>
+        {% else %}
+        <a href="{% url 'user_login' %}">
+          <button id="loginButton" class="btn btn-light ml-2">
+            Login
+          </button>
+        </a>
+        {% endif %}
+
       </ul>
     </div>
   </nav>
 
-  <!-- {% if username %}
+  {% if username %}
   <h1>Welcome, {{ username }}</h1>
-  {% endif %} -->
+  {% endif %}
+
+  {% include 'bookcards.html' %}
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

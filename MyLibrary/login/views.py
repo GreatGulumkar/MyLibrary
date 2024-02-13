@@ -1,16 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # rest_framework imports
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from database.models import UserProfile
+from database.models import UserProfile, BookProfile
 
 
 @csrf_exempt
 @api_view(["POST", "GET"])
 def user_login(request):
+
+    if(request.session.get('login')):
+        print("User logged in")
+
 
     if request.method == "POST":
 
@@ -19,8 +23,11 @@ def user_login(request):
 
         if UserProfile.objects.filter(email=email, password=password).exists():
             data = {"username": request.data.get("email")}
+            
+            books = BookProfile.objects.all() # can try this using GET
+            request.session['login'] =  True
 
-            return render(request, "index.html", data)
+            return render(request, 'index.html', { 'books' : books, 'login' : True })
             # return Response("User successfully logged in")
         else:
             pass
@@ -28,6 +35,13 @@ def user_login(request):
 
     return render(request, "login.html")
 
+
+@csrf_exempt
+@api_view(["POST", "GET"])
+def user_logout(request):
+    print('logout function call')
+    request.session['login'] =  True
+    return render(request,'index.html')
 
 @csrf_exempt
 @api_view(["POST", "GET", "PUT"])
